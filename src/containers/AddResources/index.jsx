@@ -971,7 +971,7 @@ const AddResources = (props) => {
           <TextField
             style={{ width: "100%" }}
             variant="outlined"
-            label="Information Source"
+            label="Other Information"
             value={lead_source}
             onChange={(e) => setLeadSource(e.target.value)}
           />
