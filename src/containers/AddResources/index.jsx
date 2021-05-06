@@ -647,7 +647,7 @@ const resourceTypes = [
 ];
 
 const resourceSubtypes = {
-  Oxygen: ["New Cylinder", "Refill", "Concentrator"],
+  Oxygen: ["New Cylinder", "Refill", "Concentrator", "Cans"],
   "Hospital Beds": [
     "ICU Bed",
     "Ventilator Bed",
