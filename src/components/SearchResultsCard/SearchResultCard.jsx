@@ -207,7 +207,7 @@ const SearchResultCard = (props) => {
   );
 
   useEffect(() => {
-    let voteUpdateBy = localStorage.getItem(`voteUpdateBy-${ticketId}`);
+    let voteUpdateBy = parseInt(localStorage.getItem(`voteUpdateBy-${ticketId}`));
     let currentVote = localStorage.getItem(`currentVote-${ticketId}`);
 
     if (voteUpdateBy === 2 && currentVote) {
