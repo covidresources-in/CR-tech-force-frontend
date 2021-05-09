@@ -66,6 +66,9 @@ You can now visit <http://localhost:3000/> to view the application.
 
 Further, checkout [package.json](https://github.com/CodingGardenCommunity/app-backend/blob/develop/package.json) file to learn about (more) available scripts/commands.
 
+## CONTRIBUTOR
+
+
 <!-- Links -->
 
 [slack-group]: https://join.slack.com/t/covidresourcesin/shared_invite/zt-poh78y1y-EVLUgWvw4uli7Cy6tfGQwQ
