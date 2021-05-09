@@ -207,8 +207,8 @@ const SearchResultCard = (props) => {
   );
 
   useEffect(() => {
-    let voteUpdateBy = localStorage.getItem(`voteUpdateBy-${ticketId}`);
-    let currentVote = parseInt(localStorage.getItem(`currentVote-${ticketId}`));
+    let voteUpdateBy = parseInt(localStorage.getItem(`voteUpdateBy-${ticketId}`));
+    let currentVote = localStorage.getItem(`currentVote-${ticketId}`);
 
     if (voteUpdateBy === 2 && currentVote) {
       handleTicketVoteClick(currentVote === "up" ? "up" : "down");
