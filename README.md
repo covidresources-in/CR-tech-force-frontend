@@ -18,7 +18,7 @@ By helping each other is how we come out of this crisis.
 
 ## Contribute
 
-> NOTE: If you find yourself in some trouble going through this, reach out to us directly on our [What's app Group][whats-app-group].
+> NOTE: If you find yourself in some trouble going through this, reach out to us directly on our [What's app Group][whats-app-group] OR [Slack group][slack-group].
 
 ### Prerequisites
 
@@ -66,16 +66,10 @@ You can now visit <http://localhost:3000/> to view the application.
 
 Further, checkout [package.json](https://github.com/CodingGardenCommunity/app-backend/blob/develop/package.json) file to learn about (more) available scripts/commands.
 
-## Dependencies used
-
-<!-- - [ESLint](https://eslint.org/): Code linter. Analyses the code for potential errors.
-  - This project uses ESLint in conjunction with another dependency called "eslint-config-airbnb" for implementing the [airbnb set of rules](https://github.com/airbnb/javascript) helping to write clean javascript.   -->
-
-- [Jest](https://jestjs.io/): For testing.
-
 <!-- Links -->
 
-[whats-app-group]: whatsapp
+[slack-group]: https://join.slack.com/t/covidresourcesin/shared_invite/zt-poh78y1y-EVLUgWvw4uli7Cy6tfGQwQ
+[whats-app-group]: https://chat.whatsapp.com/Hu1vvpQw0A6GBG1aTJPHoV
 [how-to-fork]: https://docs.github.com/en/github/getting-started-with-github/fork-a-repo
 [backend-repository]: https://github.com/madhavanmalolan/covidresources.in-backend
 [how-to-clone]: https://help.github.com/articles/cloning-a-repository/
