@@ -1,13 +1,14 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Formik, Form, Field } from 'formik';
 import { resourcesMap } from './resources-data';
 import { Button, makeStyles, TextField, Typography } from '@material-ui/core';
-import { useMutation } from '@apollo/client';
-import { CREATE_TICKET } from './graphql-queries';
+import { ApolloError, useLazyQuery, useMutation } from '@apollo/client';
+import { CREATE_TICKET, FETCH_TICKET, UPDATE_TICKET } from './graphql-queries';
 import { Alert, Autocomplete, AutocompleteRenderInputParams } from '@material-ui/lab';
 import statesCitiesData from '../../utils/state-city-map';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { VERIFIED_LEAD_PAGE_ROUTE } from '../../App';
+import { useLocation, useParams } from 'react-router';
 
 interface Values {
     state: string;
@@ -79,34 +80,65 @@ const validateForm = (values: Values) => {
     return errors;
 }
 
+function useQuery() {
+    return new URLSearchParams(useLocation().search);
+}
+
 
 function AddEditResource() {
     const classes = useStyles();
     const isSmBreakpointAndAbove = useMediaQuery('(min-width: 600px)');
     const isVerifiedLeadPage = window.location.pathname.includes(VERIFIED_LEAD_PAGE_ROUTE);
+    const query = useQuery();
+
+    const ticketId = query.get('id');
+    const updateTicketToken = query.get('updateTicketToken');
+    const isUpdatePage = ticketId && updateTicketToken;
 
     const [createTicket] = useMutation(CREATE_TICKET, {
         update(_proxy, result) {
             console.log(result);
         },
+        onError(error: ApolloError) {
+            console.error(error.message);
+        }
     });
 
+    const [updateTicket] = useMutation(UPDATE_TICKET, {
+        update(_proxy, result) {
+            console.log(result);
+        },
+        onError(error: ApolloError) {
+            console.error(error.message);
+        }
+    });
+
+    const [getTicket, { data: ticketData }] = useLazyQuery(FETCH_TICKET);
+
+    useEffect(() => {
+        if (isUpdatePage) {
+            getTicket({
+                variables: {
+                    ticketId
+                }
+            })
+        }
+    }, [ticketId, isUpdatePage]);
+
     const handleSubmit = (values: Values) => {
-        const {
-            state, city, resourceType, resourceSubtype,
-            address, pincode, contactName, phoneNumber,
-            description, secretKey
-        } = values
-
-        createTicket({
-            variables: {
-                state, city, contactName, phoneNumber, resourceType,
-                resourceSubtype, address, pincode, description,
-                secretKey
-            }
-        });
+        if (isUpdatePage) {
+            updateTicket({
+                variables: {
+                    ...values,
+                    updateTicketToken
+                }
+            })
+        } else {
+            createTicket({
+                variables: values
+            });
+        }
     }
-
 
     return (
         <>
@@ -128,7 +160,7 @@ function AddEditResource() {
                 </div>
             </div>
             <div className="d-flex justify-content-center">
-                <Formik initialValues={initialValues} validate={validateForm} onSubmit={handleSubmit}>
+                <Formik initialValues={ticketData || initialValues} validate={validateForm} onSubmit={handleSubmit}>
                     {({ values, touched, setValues, errors, submitForm, isValid }) => (
                         <Form className={`${isSmBreakpointAndAbove ? 'w-50' : ''}`}>
                             <Field
@@ -368,8 +400,8 @@ function AddEditResource() {
                                 </Alert>}
                             <div className="d-flex justify-content-center">
                                 <Button size="large" variant="contained" color="primary" onClick={submitForm}>
-                                    Submit
-                            </Button>
+                                    {isUpdatePage ? 'Update' : 'Submit'}
+                                </Button>
                             </div>
                         </Form>
                     )}
