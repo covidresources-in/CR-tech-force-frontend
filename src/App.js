@@ -8,7 +8,7 @@ import Header from './components/Header';
 import ScrollToTop from './components/ScrollToTop';
 import SocialLinks from './components/SocialLinks';
 import Home from './containers';
-import AddResources from './containers/AddResources';
+import AddEditResource from './containers/add-edit-resource';
 import DataPartnerPage from './containers/DataPartner';
 import SearchPage from './containers/SearchPage';
 import VolunteerPage from './containers/Volunteer';
@@ -73,8 +73,9 @@ function App() {
                 <Header />
                 <div className="container">
                   <Switch>
-                    <Route exact path="/submit-a-lead" component={AddResources} />
-                    <Route exact path={VERIFIED_LEAD_PAGE_ROUTE} component={AddResources} />
+                    <Route exact path="/submit-a-lead" component={AddEditResource} />
+                    <Route exact path="/update-a-lead" component={AddEditResource} />
+                    <Route exact path={VERIFIED_LEAD_PAGE_ROUTE} component={AddEditResource} />
                     <Route exact path="/home" component={Home} />
                     <Route exact path="/search" component={SearchPage} />
                     <Route exact path="/" component={Home} />
