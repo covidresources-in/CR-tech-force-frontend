@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
   },
   root: {
     minWidth: theme.spacing(37.25),
-    boxShadow: "0 0 3px 2px #EEE",
+    border: "1px solid #DDD",
   },
   cardHeader: {
     display: "flex",
