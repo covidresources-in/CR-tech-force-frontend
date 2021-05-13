@@ -13,6 +13,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import GreenTick from "../GreenTick/GreenTick";
 import ThumbsUp from "../../global/assets/icons/thumsup.svg";
 import ThumbsDown from "../../global/assets/icons/thumbsdown.svg";
+import CopyButton from "../../global/assets/icons/copy.svg";
 import { gql, useMutation } from "@apollo/client";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -31,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
   cardHeader: {
     display: "flex",
     flexDirection: "column",
-    padding: theme.spacing(1.5, 2.75, 0.625),
+    padding: theme.spacing(1.5, 2.0, 0.625),
     background: "linear-gradient(97.93deg, #4452CE 43.88%, #6744CC 109.61%)",
     color: "#fff",
     borderRadius: "5px",
@@ -308,11 +309,12 @@ const SearchResultCard = (props) => {
 
             <div>
               <Button
-                style={{ height: "fit-content", textTransform: "capitalize" }}
+                style={{ height: "fit-content", textTransform: "capitalize", fontSize:"0.8em" }}
                 onClick={() => copyInfo()}
                 color="secondary"
                 variant="outlined"
               >
+                <img src={CopyButton} alt={"Copy"} style={{width: "20px", marginRight: "5px"}} />
                 Share
               </Button>
             </div>
