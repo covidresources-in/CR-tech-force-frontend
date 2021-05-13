@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     flexDirection: "column",
     padding: theme.spacing(1.5, 2.0, 0.625),
-    background: "linear-gradient(97.93deg, #4452CE 43.88%, #6744CC 109.61%)",
+    background: "#4556CA",
     color: "#fff",
     borderRadius: "5px",
     margin: "4px"
@@ -134,9 +134,6 @@ const SearchResultCard = (props) => {
 
   const [dialogMessage, setDialogMessage] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
-
-  const [allowUpvote, setAllowUpvote] = useState(true);
-  const [allowDownvote, setAllowDownvote] = useState(true);
 
   const [upvoteTicket] = useMutation(UPVOTE_COUNT, {
     variables: {
@@ -423,7 +420,7 @@ const SearchResultCard = (props) => {
                 <IconButton
                   onClick={() => handleTicketVoteClick("up")}
                   style={{ background:
-                    voted && voted[ticketId] === "up" ? "#46D3BA" : "#cccccc",
+                    voted && voted[ticketId] === "up" ? "#3e3e3e" : "#ffffff",
                     border: "1px solid #ccc" }}
                 >
                   <Badge
@@ -439,7 +436,7 @@ const SearchResultCard = (props) => {
                 <IconButton
                   onClick={() => handleTicketVoteClick("down")}
                   style={{ background:
-                    voted && voted[ticketId] === "down" ? "#46D3BA" : "#cccccc", 
+                    voted && voted[ticketId] === "down" ? "#3e3e3e" : "#ffffff", 
                     border: "1px solid #ccc" }}
                 >
                   <Badge
