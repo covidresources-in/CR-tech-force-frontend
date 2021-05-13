@@ -584,6 +584,7 @@ const cities = {
     "Mussoorie",
     "Nainital",
     "Pithoragarh",
+    "Rishikesh",
   ],
   "West Bengal": [
     "Alipore",
@@ -663,7 +664,7 @@ const resourceSubtypes = {
 };
 
 const CREATE_TICKET = gql`
-  mutation(
+  mutation (
     $state: String
     $city: String
     $address: String
