@@ -58,6 +58,7 @@
     ]
   },
   "devDependencies": {
-    "@types/react-router": "^5.1.13"
+    "@types/react-router": "^5.1.13",
+    "all-contributors-cli": "^6.20.0"
   }
 }
