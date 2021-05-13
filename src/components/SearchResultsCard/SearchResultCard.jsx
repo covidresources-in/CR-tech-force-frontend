@@ -11,8 +11,8 @@ import {
 } from "@material-ui/core";
 import React, { useState, useEffect, useCallback } from "react";
 import GreenTick from "../GreenTick/GreenTick";
-import ThumbsUp from "../../global/assets/icons/thumsup.svg";
-import ThumbsDown from "../../global/assets/icons/thumbsdown.svg";
+import ThumbUpAltIcon from '@material-ui/icons/ThumbUpAlt';
+import ThumbDownAltIcon from '@material-ui/icons/ThumbDownAlt';
 import CopyButton from "../../global/assets/icons/copy.svg";
 import { gql, useMutation } from "@apollo/client";
 import dayjs from "dayjs";
@@ -419,15 +419,15 @@ const SearchResultCard = (props) => {
               <div className={classes.thumbsUp}>
                 <IconButton
                   onClick={() => handleTicketVoteClick("up")}
-                  style={{ background:
-                    voted && voted[ticketId] === "up" ? "#3e3e3e" : "#ffffff",
+                  style={{ color:
+                    voted && voted[ticketId] === "up" ? "#2AA174" : "#CCC",
                     border: "1px solid #ccc" }}
                 >
                   <Badge
                     classes={{ badge: classes.upBadge }}
                     badgeContent={upvote > 0 ? upvote : null}
                   >
-                    <img src={ThumbsUp} alt={"thumbs up"} style={{width: "20px"}} />
+                    <ThumbUpAltIcon />
                   </Badge>
                 </IconButton>
 
@@ -435,15 +435,15 @@ const SearchResultCard = (props) => {
               <div className={classes.thumbsDown}>
                 <IconButton
                   onClick={() => handleTicketVoteClick("down")}
-                  style={{ background:
-                    voted && voted[ticketId] === "down" ? "#3e3e3e" : "#ffffff", 
+                  style={{ color:
+                    voted && voted[ticketId] === "down" ? "#E94235" : "#CCC", 
                     border: "1px solid #ccc" }}
                 >
                   <Badge
                     classes={{ badge: classes.downBadge }}
                     badgeContent={upvote < 0 ? upvote : null}
                   >
-                    <img src={ThumbsDown} alt={"thumbs down"} style={{width: "20px"}} />
+                    <ThumbDownAltIcon/>
                   </Badge>
                 </IconButton>
 
