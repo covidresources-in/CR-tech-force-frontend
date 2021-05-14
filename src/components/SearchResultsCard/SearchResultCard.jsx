@@ -1,3 +1,4 @@
+import { gql, useMutation } from "@apollo/client";
 import {
   Badge,
   Button,
@@ -9,14 +10,13 @@ import {
   Typography,
   withTheme,
 } from "@material-ui/core";
-import React, { useState, useEffect, useCallback } from "react";
-import GreenTick from "../GreenTick/GreenTick";
-import ThumbUpAltIcon from '@material-ui/icons/ThumbUpAlt';
-import ThumbDownAltIcon from '@material-ui/icons/ThumbDownAlt';
-import CopyButton from "../../global/assets/icons/copy.svg";
-import { gql, useMutation } from "@apollo/client";
+import ThumbDownAltIcon from "@material-ui/icons/ThumbDownAlt";
+import ThumbUpAltIcon from "@material-ui/icons/ThumbUpAlt";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import React, { useCallback, useEffect, useState } from "react";
+import CopyButton from "../../global/assets/icons/copy.svg";
+import GreenTick from "../GreenTick/GreenTick";
 dayjs.extend(relativeTime);
 
 const useStyles = makeStyles((theme) => ({
@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
     background: "#4556CA",
     color: "#fff",
     borderRadius: "5px",
-    margin: "4px"
+    margin: "4px",
   },
   cardTitle: {
     lineHeight: "23.6px",
@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
-    background: '#FAFAFA',
+    background: "#FAFAFA",
     color: "#777",
   },
   thumbsUp: {
@@ -81,12 +81,12 @@ const useStyles = makeStyles((theme) => ({
   },
   blackText: {
     fontSize: "1.1em",
-    color: '#111'
-  }
+    color: "#111",
+  },
 }));
 
 const UPVOTE_COUNT = gql`
-  mutation($ticketId: String) {
+  mutation ($ticketId: String) {
     upvoteTicket(input: { ticketId: $ticketId }) {
       status
       message
@@ -95,7 +95,7 @@ const UPVOTE_COUNT = gql`
 `;
 
 const DOWNVOTE_COUNT = gql`
-  mutation($ticketId: String) {
+  mutation ($ticketId: String) {
     downvoteTicket(input: { ticketId: $ticketId }) {
       status
       message
@@ -112,7 +112,6 @@ const SearchResultCard = (props) => {
     location,
     details,
     thumbsUpcount,
-    theme,
     ticketId,
     resourceType,
     subResourceType,
@@ -218,7 +217,9 @@ const SearchResultCard = (props) => {
   );
 
   useEffect(() => {
-    let voteUpdateBy = parseInt(localStorage.getItem(`voteUpdateBy-${ticketId}`));
+    let voteUpdateBy = parseInt(
+      localStorage.getItem(`voteUpdateBy-${ticketId}`)
+    );
     let currentVote = localStorage.getItem(`currentVote-${ticketId}`);
 
     if (voteUpdateBy === 2 && currentVote) {
@@ -253,15 +254,7 @@ const SearchResultCard = (props) => {
     return copyText;
   };
 
-  const copyInfo = () => {
-    const copyText = getInfoToCopy();
-
-    navigator.clipboard.writeText(copyText);
-    setDialogMessage("Information Copied to Clipboard");
-    setDialogOpen(true);
-  };
-
-  const copyLink = () => {
+  const shareInfo = () => {
     const copyText = getInfoToCopy();
 
     if (navigator.share) {
@@ -287,10 +280,7 @@ const SearchResultCard = (props) => {
     <div className={`${classes.container} ${props.className || ""}`}>
       <Card variant="outlined" className={classes.root}>
         <div className={classes.cardHeader}>
-
-
           <div className="d-flex flex-row py-2 justify-content-between">
-
             <div className="d-flex flex-column">
               <Typography style={{ fontSize: "18px" }}>
                 {resourceType} / {subResourceType}
@@ -301,131 +291,116 @@ const SearchResultCard = (props) => {
                   verified {getVerifiedText(lastVerified)}
                 </Typography>
               </div>
-              
             </div>
 
-            <div>
-              <Button
-                style={{ height: "fit-content", textTransform: "capitalize", fontSize:"0.8em" }}
-                onClick={() => copyInfo()}
-                color="secondary"
-                variant="outlined"
-              >
-                <img src={CopyButton} alt={"Copy"} style={{width: "20px", marginRight: "5px"}} />
-                Share
-              </Button>
-            </div>
-
+            {navigator.share && (
+              <div>
+                <Button
+                  style={{
+                    height: "fit-content",
+                    textTransform: "capitalize",
+                    fontSize: "0.8em",
+                  }}
+                  onClick={() => shareInfo()}
+                  color="secondary"
+                  variant="outlined"
+                >
+                  <img
+                    src={CopyButton}
+                    alt={"Copy"}
+                    style={{ width: "20px", marginRight: "5px" }}
+                  />
+                  Share
+                </Button>
+              </div>
+            )}
           </div>
-
         </div>
 
         <div className={classes.cardContent}>
           <div className="d-flex flex-column p-3">
-
-            {title?
+            {title ? (
               <div className="flex-grow-1 mb-2">
-              
-              <Typography variant="body2">Name</Typography>
-              <Typography variant="body1" className={classes.blackText}>
-                {title || '-'}
-              </Typography>
-            </div>
+                <Typography variant="body2">Name</Typography>
+                <Typography variant="body1" className={classes.blackText}>
+                  {title || "-"}
+                </Typography>
+              </div>
+            ) : null}
 
-            : null}
-            
-            {phone?
+            {phone ? (
               <div className="flex-grow-1 mb-2">
-              
                 <Typography variant="body2">Phone</Typography>
                 <Typography variant="h6">
                   <a href={`tel:${phone}`}>{phone}</a>
                 </Typography>
               </div>
+            ) : null}
 
-            :null}
-
-            {location? 
+            {location ? (
               <div className="flex-grow-1 mb-2">
-              
                 <Typography variant="body2">Location</Typography>
                 <Typography variant="body1" className={classes.blackText}>
-                  {location || '-'}
+                  {location || "-"}
                 </Typography>
               </div>
-
-            :null}
-
-
+            ) : null}
           </div>
 
-          { availability || costPerUnit || details? 
-            <Divider className="my-2"/> 
-          : null}
+          {availability || costPerUnit || details ? (
+            <Divider className="my-2" />
+          ) : null}
 
-          { availability || costPerUnit?
-
+          {availability || costPerUnit ? (
             <div className="d-flex flex-row p-3">
-            
-              {availability? 
-            
+              {availability ? (
                 <div className="flex-grow-1 mb-2">
-                  
                   <Typography variant="body2">Availability</Typography>
                   <Typography variant="body1" className={classes.blackText}>
                     {availability || "-"}
                   </Typography>
                 </div>
-              
-              : null}
+              ) : null}
 
-              {costPerUnit?
+              {costPerUnit ? (
                 <div className="flex-grow-1 mb-2">
-      
                   <Typography variant="body2">Cost Per Unit</Typography>
                   <Typography variant="body1" className={classes.blackText}>
                     {costPerUnit || "-"}
                   </Typography>
-    
                 </div>
-              :null}
-
-          </div>
-          
-            : null
-          }
-          
-          {details?
-            
-            <div className="p-3">
-              <Typography variant="body2"
-                  >
-                    Other Info
-                  </Typography>
-                  <Typography  variant="body1" className={classes.blackText}>{details || "-"}
-                  </Typography>
+              ) : null}
             </div>
+          ) : null}
 
-          :null}
-          
+          {details ? (
+            <div className="p-3">
+              <Typography variant="body2">Other Info</Typography>
+              <Typography variant="body1" className={classes.blackText}>
+                {details || "-"}
+              </Typography>
+            </div>
+          ) : null}
         </div>
-          
 
         <div className={classes.cardFooter}>
-
           <div className="d-flex flex-row p-3">
-            <Typography style={{ opacity: 0.7, width: "80%", padding: "10px"}} variant="body2">
+            <Typography
+              style={{ opacity: 0.7, width: "80%", padding: "10px" }}
+              variant="body2"
+            >
               Was this helpful?
             </Typography>
-          
-            <div className="d-flex flex-row">
 
+            <div className="d-flex flex-row">
               <div className={classes.thumbsUp}>
                 <IconButton
                   onClick={() => handleTicketVoteClick("up")}
-                  style={{ color:
-                    voted && voted[ticketId] === "up" ? "#2AA174" : "#CCC",
-                    border: "1px solid #ccc" }}
+                  style={{
+                    color:
+                      voted && voted[ticketId] === "up" ? "#2AA174" : "#CCC",
+                    border: "1px solid #ccc",
+                  }}
                 >
                   <Badge
                     classes={{ badge: classes.upBadge }}
@@ -434,42 +409,39 @@ const SearchResultCard = (props) => {
                     <ThumbUpAltIcon />
                   </Badge>
                 </IconButton>
-
               </div>
               <div className={classes.thumbsDown}>
                 <IconButton
                   onClick={() => handleTicketVoteClick("down")}
-                  style={{ color:
-                    voted && voted[ticketId] === "down" ? "#E94235" : "#CCC", 
-                    border: "1px solid #ccc" }}
+                  style={{
+                    color:
+                      voted && voted[ticketId] === "down" ? "#E94235" : "#CCC",
+                    border: "1px solid #ccc",
+                  }}
                 >
                   <Badge
                     classes={{ badge: classes.downBadge }}
                     badgeContent={upvote < 0 ? upvote : null}
                   >
-                    <ThumbDownAltIcon/>
+                    <ThumbDownAltIcon />
                   </Badge>
                 </IconButton>
-
               </div>
-
-            </div>  
-          
+            </div>
           </div>
-          
         </div>
       </Card>
 
-      {navigator.share && (
+      {/* {navigator.share && (
         <Button
-          onClick={() => copyLink()}
+          onClick={() => shareInfo()}
           color="primary"
           variant="outlined"
           style={{ marginTop: theme.spacing(3) }}
         >
           Share
         </Button>
-      )}
+      )} */}
 
       <Snackbar
         anchorOrigin={{
