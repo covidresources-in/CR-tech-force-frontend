@@ -644,6 +644,7 @@ const resourceTypes = [
   "Testing",
   "Food / Tiffin",
   "Ambulance",
+  "Tele consultation",
 ];
 
 const resourceSubtypes = {
@@ -660,10 +661,11 @@ const resourceSubtypes = {
   Testing: ["Home Testing", "Lab Testing"],
   "Food / Tiffin": ["Tiffin Service", "Meal Provider"],
   Ambulance: ["Normal", "Advanced Life Support"],
+  "Tele consultation": ["Tele consultation"],
 };
 
 const CREATE_TICKET = gql`
-  mutation(
+  mutation (
     $state: String
     $city: String
     $address: String
