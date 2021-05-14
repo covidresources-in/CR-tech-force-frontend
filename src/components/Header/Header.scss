@@ -1,4 +1,4 @@
-$root: '.Header';
+$root: ".Header";
 
 #{$root} {
   padding: 24px 64px;
@@ -9,7 +9,7 @@ $root: '.Header';
     &.isHeader {
       padding: 0;
     }
-    .JumboButton {
+    .JumboButton.superhero-button {
       display: none;
     }
   }
