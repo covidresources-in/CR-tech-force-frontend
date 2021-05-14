@@ -646,6 +646,7 @@ const resourceTypes = [
   "Food / Tiffin",
   "Ambulance",
   "Tele consultation",
+  "Others",
 ];
 
 const resourceSubtypes = {
@@ -663,6 +664,7 @@ const resourceSubtypes = {
   "Food / Tiffin": ["Tiffin Service", "Meal Provider"],
   Ambulance: ["Normal", "Advanced Life Support"],
   "Tele consultation": ["Tele consultation"],
+  Others: ["Others"],
 };
 
 const CREATE_TICKET = gql`
