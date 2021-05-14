@@ -558,6 +558,7 @@ const statesCitiesData = [{
         'Mussoorie',
         'Nainital',
         'Pithoragarh',
+        'Rishikesh'
     ]}, {
     state:'West Bengal', 
     cities: [

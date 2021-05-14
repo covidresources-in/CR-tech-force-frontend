@@ -584,6 +584,7 @@ const cities = {
     "Mussoorie",
     "Nainital",
     "Pithoragarh",
+    "Rishikesh",
   ],
   "West Bengal": [
     "Alipore",
