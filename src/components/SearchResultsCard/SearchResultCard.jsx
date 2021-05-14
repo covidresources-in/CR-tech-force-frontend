@@ -363,34 +363,38 @@ const SearchResultCard = (props) => {
             <Divider className="my-2"/> 
           : null}
 
-          <div className="d-flex flex-row p-3">
-            
-            {availability? 
-          
-              <div className="flex-grow-1 mb-2">
-                
-                <Typography variant="body2">Availability</Typography>
-                <Typography variant="body1" className={classes.blackText}>
-                  {availability || "-"}
-                </Typography>
-              </div>
-            
-            : null}
+          { availability || costPerUnit?
 
-            {costPerUnit?
-              <div className="flex-grow-1 mb-2">
+            <div className="d-flex flex-row p-3">
+            
+              {availability? 
+            
+                <div className="flex-grow-1 mb-2">
+                  
+                  <Typography variant="body2">Availability</Typography>
+                  <Typography variant="body1" className={classes.blackText}>
+                    {availability || "-"}
+                  </Typography>
+                </div>
+              
+              : null}
+
+              {costPerUnit?
+                <div className="flex-grow-1 mb-2">
+      
+                  <Typography variant="body2">Cost Per Unit</Typography>
+                  <Typography variant="body1" className={classes.blackText}>
+                    {costPerUnit || "-"}
+                  </Typography>
     
-                <Typography variant="body2">Cost Per Unit</Typography>
-                <Typography variant="body1" className={classes.blackText}>
-                  {costPerUnit || "-"}
-                </Typography>
-  
-              </div>
-            :null}
-
+                </div>
+              :null}
 
           </div>
-
+          
+            : null
+          }
+          
           {details?
             
             <div className="p-3">
