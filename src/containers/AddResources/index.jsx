@@ -584,6 +584,7 @@ const cities = {
     "Mussoorie",
     "Nainital",
     "Pithoragarh",
+    "Rishikesh",
   ],
   "West Bengal": [
     "Alipore",
@@ -644,26 +645,31 @@ const resourceTypes = [
   "Testing",
   "Food / Tiffin",
   "Ambulance",
+  "Tele consultation",
+  "Others",
 ];
 
 const resourceSubtypes = {
-  Oxygen: ["New Cylinder", "Refill", "Concentrator", "Cans"],
+  Oxygen: ["New Cylinder", "Refill", "Concentrator", "Cans", "Others"],
   "Hospital Beds": [
     "ICU Bed",
     "Ventilator Bed",
     "Oxygen Beds",
     "Non-Oxygen Beds",
+    "Others",
   ],
-  "Medicines/Injections": ["Remdesivir", "Fabiflu", "Tocilizumab"],
-  Blood: ["Plasma", "Blood"],
-  "Home Care": ["Home ICU Setup", "Nursing Staff"],
-  Testing: ["Home Testing", "Lab Testing"],
-  "Food / Tiffin": ["Tiffin Service", "Meal Provider"],
-  Ambulance: ["Normal", "Advanced Life Support"],
+  "Medicines/Injections": ["Remdesivir", "Fabiflu", "Tocilizumab", "Others"],
+  Blood: ["Plasma", "Blood", "Others"],
+  "Home Care": ["Home ICU Setup", "Nursing Staff", "Others"],
+  Testing: ["Home Testing", "Lab Testing", "Others"],
+  "Food / Tiffin": ["Tiffin Service", "Meal Provider", "Others"],
+  Ambulance: ["Normal", "Advanced Life Support", "Others"],
+  "Tele consultation": ["Tele consultation", "Others"],
+  Others: ["Others"],
 };
 
 const CREATE_TICKET = gql`
-  mutation(
+  mutation (
     $state: String
     $city: String
     $address: String

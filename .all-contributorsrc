@@ -1,0 +1,14 @@
+{
+  "projectName": "cr-tech-force-frontend",
+  "projectOwner": "CR.Tech",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 300,
+  "commit": true,
+  "commitConvention": "eslint",
+  "contributors": [],
+  "contributorsPerLine": 7
+}

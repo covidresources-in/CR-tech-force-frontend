@@ -8,7 +8,7 @@ import { useHistory } from 'react-router';
 import SearchBar from '../../components/SearchBar';
 import SearchResultCard from '../../components/SearchResultsCard/SearchResultCard';
 import ROUTES from '../../constants/routes';
-import { Context as SearchContext } from './../../context/SearchContext';
+import { Context as SearchContext } from '../../context/SearchContext';
 import { logEvent } from "../../utils/gtag";
 
 const TIMEOUT_DEFAULT_TIME = 15;
