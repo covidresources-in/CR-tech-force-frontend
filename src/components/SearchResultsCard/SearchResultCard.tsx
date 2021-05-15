@@ -88,7 +88,7 @@ const useStyles = makeStyles((theme) => ({
 
 const UPVOTE_COUNT = gql`
   mutation ($id: String) {
-    upvoteTicket(input: { id: $id }) {
+    upvoteTicket(input: { ticketId: $id }) {
       status
       message
     }
@@ -97,7 +97,7 @@ const UPVOTE_COUNT = gql`
 
 const DOWNVOTE_COUNT = gql`
   mutation ($id: String) {
-    downvoteTicket(input: { id: $id }) {
+    downvoteTicket(input: { ticketId: $id }) {
       status
       message
     }
