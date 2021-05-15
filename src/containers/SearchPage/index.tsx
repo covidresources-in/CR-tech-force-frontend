@@ -10,6 +10,8 @@ import SearchResultCard from '../../components/SearchResultsCard/SearchResultCar
 import ROUTES from '../../constants/routes';
 import { Context as SearchContext } from '../../context/SearchContext';
 import { logEvent } from "../../utils/gtag";
+import { searchGraphQLNode } from './types';
+import { transformSearchDataToSearchResultCardData } from './data-transformer';
 
 const TIMEOUT_DEFAULT_TIME = 15;
 const TWITTER_SOCIAL_HANDLE = 'https://twitter.com/COVResourcesIn'
@@ -136,23 +138,13 @@ function SearchPage() {
         {currentData.length !== 0 && <>
           <Typography color="textSecondary" className="mb-4">Showing {currentData.length} Result{currentData.length > 1 ? 's' : ''}</Typography>
           <div className="d-flex flex-wrap">
-            {currentData.map(((edgeData: any, index: number) =>
+            {currentData.map(((edgeData: {
+              node: searchGraphQLNode
+            }, index: number) =>
               <SearchResultCard
                 key={index}
+                data={transformSearchDataToSearchResultCardData(edgeData.node)}
                 className="col-12 col-md-6 col-lg-4 px-sm-4"
-                title={edgeData.node.contactName}
-                lastVerified={edgeData.node.updatedAt}
-                phone={edgeData.node.supplierDonorContactNumber}
-                location={edgeData.node.address}
-                details={edgeData.node.otherInfo}
-                thumbsUpcount={edgeData.node.upvoteCount}
-                ticketId={edgeData.node.ticketId}
-                state={edgeData.node.state}
-                city={edgeData.node.city}
-                costPerUnit={edgeData.node.costPerUnit}
-                resourceType={edgeData.node.resourceType}
-                subResourceType={edgeData.node.subResourceType}
-                availableUnits={edgeData.node.availableUnits}
               />
             ))}
           </div></>}
@@ -167,21 +159,19 @@ const GET_SEARCH = (filter: any) => gql`
             tickets(${filter}) {
               edges {
                 node {
-                  ticketId
-                  supplierDonorName
-                  supplierDonorContactNumber
-                  city
-                  state
-                  costPerUnit
-                  availableUnits
-                  upvoteCount
-                  resourceName
-                  contactName
+                  id
+                  updatedAt
                   resourceType
                   subResourceType
-                  updatedAt
+                  contactName
+                  contactNumber
+                  upvoteCount
+                  downvoteCount
+                  description
+                  city
+                  state
+                  pincode
                   address
-                  otherInfo
                 }
               }
             }

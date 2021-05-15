@@ -17,6 +17,7 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import React, { useCallback, useEffect, useState } from "react";
 import CopyButton from "../../global/assets/icons/copy.svg";
 import GreenTick from "../GreenTick/GreenTick";
+import { SearchResultCardData } from "./types";
 dayjs.extend(relativeTime);
 
 const useStyles = makeStyles((theme) => ({
@@ -86,8 +87,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const UPVOTE_COUNT = gql`
-  mutation ($ticketId: String) {
-    upvoteTicket(input: { ticketId: $ticketId }) {
+  mutation ($id: String) {
+    upvoteTicket(input: { id: $id }) {
       status
       message
     }
@@ -95,48 +96,39 @@ const UPVOTE_COUNT = gql`
 `;
 
 const DOWNVOTE_COUNT = gql`
-  mutation ($ticketId: String) {
-    downvoteTicket(input: { ticketId: $ticketId }) {
+  mutation ($id: String) {
+    downvoteTicket(input: { id: $id }) {
       status
       message
     }
   }
 `;
 
-const SearchResultCard = (props) => {
-  const classes = useStyles();
-  let {
-    title,
-    lastVerified,
-    phone,
-    location,
-    details,
-    thumbsUpcount,
-    ticketId,
-    resourceType,
-    subResourceType,
-    state,
-    city,
-    availability,
-    costPerUnit,
-  } = props;
+interface Props {
+  data: SearchResultCardData;
+  className: string;
+}
 
-  if (thumbsUpcount && !isNaN(thumbsUpcount)) {
-    thumbsUpcount = parseInt(thumbsUpcount);
-  } else {
-    thumbsUpcount = 0;
-  }
+const SearchResultCard = (props: Props) => {
+  const classes = useStyles();
+
+  const {
+    contactName, contactNumber, description, downvoteCount,
+    id, lastVerified, location, resourceType, subResourceType,
+    upvoteCount
+  } = props.data;
 
   let allVotes = JSON.parse(localStorage.getItem("voted"));
   const [voted, setVoted] = useState(allVotes);
-  const [upvote, setUpvote] = useState(thumbsUpcount);
+  const [upvote, setUpvote] = useState(upvoteCount);
+  const [downvote, setDownvote] = useState(downvoteCount);
 
   const [dialogMessage, setDialogMessage] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const [upvoteTicket] = useMutation(UPVOTE_COUNT, {
     variables: {
-      ticketId,
+      id,
     },
     update(proxy, result) {
       if (
@@ -160,7 +152,7 @@ const SearchResultCard = (props) => {
 
   const [downvoteTicket] = useMutation(DOWNVOTE_COUNT, {
     variables: {
-      ticketId,
+      id,
     },
     update(proxy, result) {
       if (
@@ -169,7 +161,7 @@ const SearchResultCard = (props) => {
         result.data.downvoteTicket &&
         result.data.downvoteTicket.status === "200"
       ) {
-        setUpvote(upvote - 1);
+        setDownvote(downvote + 1);
       } else {
         setDialogMessage("Please try again later.");
         setDialogOpen(true);
@@ -189,67 +181,64 @@ const SearchResultCard = (props) => {
       let votedFor = localStorage.getItem("voted");
       if (votedFor) {
         votedFor = JSON.parse(votedFor);
-        if (votedFor[ticketId]) {
-          if (votedFor[ticketId] === vote) {
+        if (votedFor[id]) {
+          if (votedFor[id] === vote) {
             vote = vote === "up" ? "down" : "up";
           } else {
             voteUpdateBy = 2;
           }
-          delete votedFor[ticketId];
+          delete votedFor[id];
         } else {
-          votedFor[ticketId] = vote;
+          votedFor[id] = vote;
         }
       } else {
         votedFor = {};
-        votedFor[ticketId] = vote;
+        votedFor[id] = vote;
       }
 
       if (voteUpdateBy === 2) {
-        localStorage.setItem(`voteUpdateBy-${ticketId}`, 2);
-        localStorage.setItem(`currentVote-${ticketId}`, vote);
+        localStorage.setItem(`voteUpdateBy-${id}`, 2);
+        localStorage.setItem(`currentVote-${id}`, vote);
       }
 
       setVoted(votedFor);
       localStorage.setItem("voted", JSON.stringify(votedFor));
       vote === "up" ? upvoteTicket() : downvoteTicket();
     },
-    [upvoteTicket, downvoteTicket, ticketId]
+    [upvoteTicket, downvoteTicket, id]
   );
 
   useEffect(() => {
     let voteUpdateBy = parseInt(
-      localStorage.getItem(`voteUpdateBy-${ticketId}`)
+      localStorage.getItem(`voteUpdateBy-${id}`)
     );
-    let currentVote = localStorage.getItem(`currentVote-${ticketId}`);
+    let currentVote = localStorage.getItem(`currentVote-${id}`);
 
     if (voteUpdateBy === 2 && currentVote) {
       handleTicketVoteClick(currentVote === "up" ? "up" : "down");
-      localStorage.removeItem(`voteUpdateBy-${ticketId}`);
-      localStorage.removeItem(`currentVote-${ticketId}`);
+      localStorage.removeItem(`voteUpdateBy-${id}`);
+      localStorage.removeItem(`currentVote-${id}`);
     }
-  }, [upvote, ticketId, handleTicketVoteClick]);
+  }, [upvote, id, handleTicketVoteClick]);
 
   const getInfoToCopy = () => {
-    const lastVerifiedText = `Last Verified: ${getVerifiedText(lastVerified)}`;
-    const phoneNumberText = `Phone Number - ${phone}`;
-    const stateText = state ? `State - ${state}` : "";
-    const cityText = city ? `City - ${city}` : "";
-    const addressText = `Address - ${location}`;
-    const detailsText = `Other details - ${details}`;
-    const resourceLead = resourceType ? `${resourceType} lead information` : "";
+    const subResourceText = subResourceType ? `/${subResourceType}` : "";
+    const resourceLeadText = resourceType ? `${resourceType}${subResourceText} lead information` : "";
+    const lastVerifiedText = lastVerified ? `Last Verified : ${lastVerified}` : "";
+    const contactNameText = contactName ? `Contact Name : ${contactName}` : '';
+    const contactNumberText = contactNumber ? `Contact Number : ${contactNumber}` : "";
+    const locationText = location ? `Location : ${location}` : "";
+    const descriptionText = description ? `Description : ${description}` : "";
 
-    const copyText = `${resourceLead}
-    ${title ? `${title} - ` : ""}
-    ${lastVerified ? lastVerifiedText : ""}
-    ${phone ? phoneNumberText : ""}
-    ${stateText}
-    ${cityText}
-    ${location ? addressText : ""}
-    ${details ? detailsText : ""}
+    const copyText = `${resourceLeadText}
+    ${lastVerifiedText}
+    ${contactNameText}
+    ${contactNumberText}
+    ${locationText}
+    ${descriptionText}
     
-    To find more such covid related information leads, visit: ${
-      window.location.origin
-    }`;
+    To find more such covid related information leads, visit: ${window.location.origin
+      }`;
 
     return copyText;
   };
@@ -268,27 +257,21 @@ const SearchResultCard = (props) => {
     }
   };
 
-  const getVerifiedText = (lastVerified) => {
-    if (!Number.isNaN(lastVerified)) {
-      return dayjs(Number(lastVerified)).fromNow();
-    }
-
-    return dayjs(lastVerified).fromNow();
-  };
-
   return (
     <div className={`${classes.container} ${props.className || ""}`}>
       <Card variant="outlined" className={classes.root}>
         <div className={classes.cardHeader}>
-          <div className="d-flex flex-row py-2 justify-content-between">
-            <div className="d-flex flex-column">
-              <Typography style={{ fontSize: "18px" }}>
-                {resourceType} / {subResourceType}
-              </Typography>
-              <div className="d-flex flex-row mt-1">
+          <div className="py-2 d-flex">
+            <div className="flex-grow-1">
+              <div className="d-flex align-items-center">
+                <Typography className="mr-2" variant="h6">
+                  {resourceType} / {subResourceType}
+                </Typography>
+              </div>
+              <div className="d-flex">
                 <GreenTick />
-                <Typography style={{ fontSize: "12px", opacity: 0.7 }}>
-                  verified {getVerifiedText(lastVerified)}
+                <Typography variant="caption" style={{ opacity: 0.7 }}>
+                  Last verified {lastVerified}
                 </Typography>
               </div>
             </div>
@@ -319,68 +302,38 @@ const SearchResultCard = (props) => {
 
         <div className={classes.cardContent}>
           <div className="d-flex flex-column p-3">
-            {title ? (
-              <div className="flex-grow-1 mb-2">
-                <Typography variant="body2">Name</Typography>
-                <Typography variant="body1" className={classes.blackText}>
-                  {title || "-"}
-                </Typography>
-              </div>
-            ) : null}
-
-            {phone ? (
-              <div className="flex-grow-1 mb-2">
-                <Typography variant="body2">Phone</Typography>
-                <Typography variant="h6">
-                  <a href={`tel:${phone}`}>{phone}</a>
-                </Typography>
-              </div>
-            ) : null}
-
-            {location ? (
-              <div className="flex-grow-1 mb-2">
-                <Typography variant="body2">Location</Typography>
-                <Typography variant="body1" className={classes.blackText}>
-                  {location || "-"}
-                </Typography>
-              </div>
-            ) : null}
-          </div>
-
-          {availability || costPerUnit || details ? (
-            <Divider className="my-2" />
-          ) : null}
-
-          {availability || costPerUnit ? (
-            <div className="d-flex flex-row p-3">
-              {availability ? (
-                <div className="flex-grow-1 mb-2">
-                  <Typography variant="body2">Availability</Typography>
-                  <Typography variant="body1" className={classes.blackText}>
-                    {availability || "-"}
-                  </Typography>
-                </div>
-              ) : null}
-
-              {costPerUnit ? (
-                <div className="flex-grow-1 mb-2">
-                  <Typography variant="body2">Cost Per Unit</Typography>
-                  <Typography variant="body1" className={classes.blackText}>
-                    {costPerUnit || "-"}
-                  </Typography>
-                </div>
-              ) : null}
-            </div>
-          ) : null}
-
-          {details ? (
-            <div className="p-3">
-              <Typography variant="body2">Other Info</Typography>
+            <div className="flex-grow-1 mb-4">
+              <Typography variant="body2">Contact Name</Typography>
               <Typography variant="body1" className={classes.blackText}>
-                {details || "-"}
+                {contactName || "-"}
               </Typography>
             </div>
-          ) : null}
+
+            <div className="flex-grow-1 mb-4">
+              <Typography variant="body2">Contact Number</Typography>
+              <Typography variant="body1">
+                {contactNumber.trim().split(" ").map(number =>
+                  <a className="mr-2" href={`tel:${number}`}>{number}</a>
+                )}
+              </Typography>
+            </div>
+
+            <div className="flex-grow-1 mb-2">
+              <Typography variant="body2">Location</Typography>
+              <Typography variant="body1" className={classes.blackText}>
+                {location || "-"}
+              </Typography>
+            </div>
+
+            <Divider className="my-3" />
+
+            <div className="flex-grow-1">
+              <Typography variant="body2">Description</Typography>
+              <Typography variant="body1" className={classes.blackText}>
+                {description || "-"}
+              </Typography>
+            </div>
+          </div>
         </div>
 
         <div className={classes.cardFooter}>
@@ -398,7 +351,7 @@ const SearchResultCard = (props) => {
                   onClick={() => handleTicketVoteClick("up")}
                   style={{
                     color:
-                      voted && voted[ticketId] === "up" ? "#2AA174" : "#CCC",
+                      voted && voted[id] === "up" ? "#2AA174" : "#CCC",
                     border: "1px solid #ccc",
                   }}
                 >
@@ -415,7 +368,7 @@ const SearchResultCard = (props) => {
                   onClick={() => handleTicketVoteClick("down")}
                   style={{
                     color:
-                      voted && voted[ticketId] === "down" ? "#E94235" : "#CCC",
+                      voted && voted[id] === "down" ? "#E94235" : "#CCC",
                     border: "1px solid #ccc",
                   }}
                 >
@@ -432,17 +385,6 @@ const SearchResultCard = (props) => {
         </div>
       </Card>
 
-      {/* {navigator.share && (
-        <Button
-          onClick={() => shareInfo()}
-          color="primary"
-          variant="outlined"
-          style={{ marginTop: theme.spacing(3) }}
-        >
-          Share
-        </Button>
-      )} */}
-
       <Snackbar
         anchorOrigin={{
           vertical: "bottom",
@@ -453,7 +395,7 @@ const SearchResultCard = (props) => {
         onClose={() => setDialogOpen(false)}
         message={dialogMessage}
       />
-    </div>
+    </div >
   );
 };
 

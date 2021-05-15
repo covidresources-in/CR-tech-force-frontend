@@ -1,14 +1,14 @@
-import React, { useEffect } from 'react'
-import { Formik, Form, Field } from 'formik';
-import { resourcesMap } from './resources-data';
-import { Button, makeStyles, TextField, Typography } from '@material-ui/core';
 import { ApolloError, useLazyQuery, useMutation } from '@apollo/client';
-import { CREATE_TICKET, FETCH_TICKET, UPDATE_TICKET } from './graphql-queries';
-import { Alert, Autocomplete, AutocompleteRenderInputParams } from '@material-ui/lab';
-import statesCitiesData from '../../utils/state-city-map';
+import { Button, makeStyles, TextField, Typography } from '@material-ui/core';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
+import { Alert, Autocomplete, AutocompleteRenderInputParams } from '@material-ui/lab';
+import { Field, Form, Formik } from 'formik';
+import React, { useEffect } from 'react';
+import { useLocation } from 'react-router';
 import { VERIFIED_LEAD_PAGE_ROUTE } from '../../App';
-import { useLocation, useParams } from 'react-router';
+import statesCitiesData from '../../utils/state-city-map';
+import { CREATE_TICKET, FETCH_TICKET, UPDATE_TICKET } from './graphql-queries';
+import { resourcesMap } from './resources-data';
 
 interface Values {
     state: string;
@@ -129,7 +129,7 @@ function AddEditResource() {
                 }
             })
         }
-    }, [ticketId, isUpdatePage]);
+    }, [ticketId, isUpdatePage, getTicket]);
 
     const handleSubmit = (values: Values) => {
         if (isUpdatePage) {
