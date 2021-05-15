@@ -61,6 +61,12 @@ const validateForm = (values: Values) => {
         errors.city = `It's important to know`
     }
 
+    if (values?.pincode) {
+        if (values.pincode.toString().length !== 6) {
+            errors.pincode = `Pincode has to length of 6 digits`
+        }
+    }
+
     if (!values.resourceType.trim()) {
         errors.resourceType = `It's important to know`
     }
