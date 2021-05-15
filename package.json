@@ -26,6 +26,7 @@
     "react-dom": "^17.0.2",
     "react-lines-ellipsis": "^0.14.1",
     "react-loader-spinner": "^4.0.0",
+    "react-responsive": "^8.2.0",
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
@@ -60,6 +61,7 @@
     ]
   },
   "devDependencies": {
-    "@types/react-router": "^5.1.13"
+    "@types/react-router": "^5.1.13",
+    "all-contributors-cli": "^6.20.0"
   }
 }

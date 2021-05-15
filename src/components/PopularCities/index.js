@@ -13,28 +13,36 @@ const popularStateCity = [
   },
   {
     state: 'Uttar Pradesh',
-    city: 'Noida'
+    city: 'Kanpur'
   },
   {
-    state: 'Haryana',
-    city: 'Gurgaon'
+    state: 'Gujarat',
+    city: 'Ahmadabad'
+  },
+  {
+    state: 'Maharashtra',
+    city: 'Mumbai'
+  },
+  {
+    state: 'Maharashtra',
+    city: 'Pune'
+  },
+  {
+    state: 'Madhya Pradesh',
+    city: 'Indore'
+  },
+  {
+    state: 'Rajasthan',
+    city: 'Jaipur'
   },
   {
     state: 'Karnataka',
     city: 'Bangalore'
   },
   {
-    state: 'Telangana',
-    city: 'Hyderabad'
+    state: 'West Bengal',
+    city: 'Kolkata'
   },
-  {
-    state: 'Tamil Nadu',
-    city: 'Chennai'
-  },
-  {
-    state: 'Maharashtra',
-    city: 'Mumbai'
-  }
 ]
 
 const PopularCities = (props) => {

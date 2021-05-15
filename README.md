@@ -44,36 +44,18 @@ Once you have the [Prerequisites](#prerequisites) covered:
 
 1. [Fork][how-to-fork] this repo
 
-1. [Clone][how-to-clone] you(forked) respository.
+To learn React, check out the [React documentation](https://reactjs.org/).
 
-1. Navigate into the project folder and install all of its necessary dependencies with Yarn.
+## Contributors ✨
 
-   ```sh
-   cd CR-tech-force-frontend
-   yarn install
-   ```
+Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
 
-1. You are ready to start contributing 😃 <br>
-   You can run -
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
 
-   ```sh
-   yarn start
-   ```
+<!-- ALL-CONTRIBUTORS-LIST:END -->
 
-...to start the server.
-
-You can now visit <http://localhost:3000/> to view the application.
-
-Further, checkout [package.json](https://github.com/CodingGardenCommunity/app-backend/blob/develop/package.json) file to learn about (more) available scripts/commands.
-
-## CONTRIBUTOR
-
-
-<!-- Links -->
-
-[slack-group]: https://join.slack.com/t/covidresourcesin/shared_invite/zt-poh78y1y-EVLUgWvw4uli7Cy6tfGQwQ
-[whats-app-group]: https://chat.whatsapp.com/Hu1vvpQw0A6GBG1aTJPHoV
-[how-to-fork]: https://docs.github.com/en/github/getting-started-with-github/fork-a-repo
-[backend-repository]: https://github.com/madhavanmalolan/covidresources.in-backend
-[how-to-clone]: https://help.github.com/articles/cloning-a-repository/
-[project-tracking]: https://trello.com/b/QtahJCEi/covid-resources
+This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!

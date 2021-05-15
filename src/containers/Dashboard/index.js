@@ -13,6 +13,9 @@ import hospitalImg from './../../global/assets/icons/hospital.svg';
 import medicineImg from './../../global/assets/icons/medicine.svg';
 import oxygenImg from './../../global/assets/icons/oxygen.svg';
 import tiffinImg from './../../global/assets/icons/tiffin.svg';
+import home_care from './../../global/assets/icons/home-care.svg';
+import testing from './../../global/assets/icons/testing.svg';
+import blood from './../../global/assets/icons/blood.svg';
 import './Dashboard.scss';
 
 
@@ -53,6 +56,27 @@ const categoryData = [
     primaryText: 'Tiffin Services',
     value: requirements[6],
     secondaryText: 'Get food delivered at your doorsteps',
+  },
+  {
+    id: 'covid_testing',
+    imgSrc: testing,
+    primaryText: 'Covid Testing',
+    value: requirements[5],
+    secondaryText: 'Find RT-PCR tests in your locality',
+  },
+  {
+    id: 'blood',
+    imgSrc: blood,
+    primaryText: 'Blood',
+    value: requirements[3],
+    secondaryText: 'Find donors for blood therapy',
+  },
+  {
+    id: 'home_care',
+    imgSrc: home_care,
+    primaryText: 'Home Care',
+    value: requirements[4],
+    secondaryText: 'Home ICU Setup, Nursing Staff',
   },
 ];
 
