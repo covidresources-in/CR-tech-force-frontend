@@ -698,6 +698,7 @@ const CREATE_TICKET = gql`
       }
     ) {
       status
+      message
     }
   }
 `;
