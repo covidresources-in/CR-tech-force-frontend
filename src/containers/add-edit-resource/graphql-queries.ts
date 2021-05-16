@@ -5,9 +5,9 @@ export const CREATE_TICKET = gql`
     $state: String
     $city: String
     $contactName: String
-    $phoneNumber: String
+    $contactNumber: String
     $resourceType: String
-    $resourceSubtype: String
+    $subResourceType: String
     $address: String
     $pincode: String
     $description: String
@@ -18,9 +18,9 @@ export const CREATE_TICKET = gql`
         state: $state
         city: $city
         contactName: $contactName
-        phoneNumber: $phoneNumber
+        contactNumber: $contactNumber
         resourceType: $resourceType
-        resourceSubtype: $resourceSubtype
+        subResourceType: $subResourceType
         address: $address
         pincode: $pincode
         description: $description
@@ -34,9 +34,9 @@ export const CREATE_TICKET = gql`
 `;
 
 export const FETCH_TICKET = gql`
-query ($ticketId: String!) {
+query ($uuid: String!) {
   workspace {
-    tickets(ticketId: $ticketId) {
+    tickets(uuid: $uuid) {
       edges {
         node {
           state
@@ -67,7 +67,6 @@ export const UPDATE_TICKET = gql`
     $pincode: String
     $description: String
     $secretKey: String
-    $updateTicketToken: String
   ) {
     createTicket(
       input: {

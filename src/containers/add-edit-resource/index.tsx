@@ -4,8 +4,8 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { Alert, Autocomplete, AutocompleteRenderInputParams } from '@material-ui/lab';
 import { Field, Form, Formik } from 'formik';
 import React, { useEffect } from 'react';
-import { useLocation } from 'react-router';
-import { VERIFIED_LEAD_PAGE_ROUTE } from '../../App';
+import { useParams } from 'react-router';
+import { VERIFIED_LEAD_PAGE_ROUTE } from '../../constants';
 import statesCitiesData from '../../utils/state-city-map';
 import { CREATE_TICKET, FETCH_TICKET, UPDATE_TICKET } from './graphql-queries';
 import { resourcesMap } from './resources-data';
@@ -16,16 +16,16 @@ interface Values {
     pincode: Number | null;
     address: string;
     resourceType: string;
-    resourceSubtype: string;
+    subResourceType: string;
     contactName: string;
-    phoneNumber: number | null;
+    contactNumber: number | null;
     description: string;
     secretKey: string;
 }
 
-interface ValuesErrors extends Omit<Values, 'pincode' | 'phoneNumber'> {
+interface ValuesErrors extends Omit<Values, 'pincode' | 'contactNumber'> {
     pincode: string;
-    phoneNumber: string;
+    contactNumber: string;
 }
 
 const initialValues: Values = {
@@ -33,14 +33,15 @@ const initialValues: Values = {
     city: '',
     address: '',
     contactName: '',
-    phoneNumber: null,
+    contactNumber: null,
     pincode: null,
     description: '',
     resourceType: '',
-    resourceSubtype: '',
+    subResourceType: '',
     secretKey: '',
 }
 
+const isVerifiedLeadPage = window.location.pathname.includes(VERIFIED_LEAD_PAGE_ROUTE);
 const useStyles = makeStyles((theme) => ({
     primaryBackground: {
         backgroundColor: theme.palette.primary.main
@@ -49,57 +50,60 @@ const useStyles = makeStyles((theme) => ({
         color: '#FFF'
     }
 }));
-
-const validateForm = (values: Values) => {
-    const errors: Partial<ValuesErrors> = {};
-
-    if (!values.state || !values.state.trim()) {
-        errors.state = `It's important to know`
-    }
-
-    if (!values.city || !values.city.trim()) {
-        errors.city = `It's important to know`
-    }
-
-    if (values?.pincode) {
-        if (values.pincode.toString().length !== 6) {
-            errors.pincode = `Pincode has to length of 6 digits`
-        }
-    }
-
-    if (!values.resourceType.trim()) {
-        errors.resourceType = `It's important to know`
-    }
-
-    if (!values.resourceSubtype.trim()) {
-        errors.resourceSubtype = `It's important to know`
-    }
-
-    if (!values.contactName.trim()) {
-        errors.contactName = `It's important to know`
-    }
-
-    if (!values.phoneNumber) {
-        errors.phoneNumber = `It's important to know`
-    }
-
-    return errors;
-}
-
-function useQuery() {
-    return new URLSearchParams(useLocation().search);
+interface Params {
+    uuid: string;
 }
 
 
 function AddEditResource() {
     const classes = useStyles();
     const isSmBreakpointAndAbove = useMediaQuery('(min-width: 600px)');
-    const isVerifiedLeadPage = window.location.pathname.includes(VERIFIED_LEAD_PAGE_ROUTE);
-    const query = useQuery();
+    const params = useParams<Params>();
 
-    const ticketId = query.get('id');
-    const updateTicketToken = query.get('updateTicketToken');
-    const isUpdatePage = ticketId && updateTicketToken;
+    const uuid = params.uuid;
+    console.log(uuid, 'uuid')
+    const isUpdatePage = uuid;
+    const needSecretKey = isVerifiedLeadPage || isUpdatePage;
+
+    const validateForm = (values: Values) => {
+        const errors: Partial<ValuesErrors> = {};
+
+        if (!values.state || !values.state.trim()) {
+            errors.state = `It's important to know`
+        }
+
+        if (!values.city || !values.city.trim()) {
+            errors.city = `It's important to know`
+        }
+
+        if (values?.pincode) {
+            if (values.pincode.toString().length !== 6) {
+                errors.pincode = `Pincode has to length of 6 digits`
+            }
+        }
+
+        if (!values.resourceType.trim()) {
+            errors.resourceType = `It's important to know`
+        }
+
+        if (!values.subResourceType.trim()) {
+            errors.subResourceType = `It's important to know`
+        }
+
+        if (!values.contactName.trim()) {
+            errors.contactName = `It's important to know`
+        }
+
+        if (!values.contactNumber) {
+            errors.contactNumber = `It's important to know`
+        }
+
+        if (needSecretKey && !values.secretKey) {
+            errors.secretKey = `It's important to know`
+        }
+
+        return errors;
+    }
 
     const [createTicket] = useMutation(CREATE_TICKET, {
         update(_proxy, result) {
@@ -125,18 +129,17 @@ function AddEditResource() {
         if (isUpdatePage) {
             getTicket({
                 variables: {
-                    ticketId
+                    uuid: uuid
                 }
             })
         }
-    }, [ticketId, isUpdatePage, getTicket]);
+    }, [uuid, isUpdatePage, getTicket]);
 
     const handleSubmit = (values: Values) => {
         if (isUpdatePage) {
             updateTicket({
                 variables: {
                     ...values,
-                    updateTicketToken
                 }
             })
         } else {
@@ -276,7 +279,7 @@ function AddEditResource() {
                                     setValues({
                                         ...values,
                                         resourceType,
-                                        resourceSubtype: ''
+                                        subResourceType: ''
                                     })
                                 }}
                                 getOptionLabel={(option: Values | string) => {
@@ -304,30 +307,30 @@ function AddEditResource() {
                                 as={Autocomplete}
                                 options={resourcesMap.find(resource => resource.type === values.resourceType)?.subTypes || []}
                                 className="mb-4"
-                                onChange={(event: any, resourceSubtype: string) => {
+                                onChange={(event: any, subResourceType: string) => {
                                     setValues({
                                         ...values,
-                                        resourceSubtype
+                                        subResourceType
                                     })
                                 }}
                                 getOptionLabel={(option: Values | string) => {
                                     if (typeof option === 'string') {
                                         return option
                                     }
-                                    if (option.resourceSubtype) {
-                                        return option.resourceSubtype
+                                    if (option.subResourceType) {
+                                        return option.subResourceType
                                     }
                                     return ''
                                 }}
                                 renderInput={(params: AutocompleteRenderInputParams) =>
                                     <TextField
                                         {...params}
-                                        error={touched.resourceSubtype && (typeof errors.resourceSubtype === 'string' && errors.resourceSubtype.length > 0)}
+                                        error={touched.subResourceType && (typeof errors.subResourceType === 'string' && errors.subResourceType.length > 0)}
                                         label="Resource Subtype"
-                                        name="resourceType"
+                                        name="resourceSubType"
                                         variant="outlined"
                                         required
-                                        value={values.resourceSubtype || ''}
+                                        value={values.subResourceType || ''}
                                     />
                                 }
                             />
@@ -354,17 +357,17 @@ function AddEditResource() {
                                 onChange={(event: any) => {
                                     setValues({
                                         ...values,
-                                        phoneNumber: event.target.value
+                                        contactNumber: event.target.value
                                     })
                                 }}
-                                value={values.phoneNumber || ''}
+                                value={values.contactNumber || ''}
                                 variant="outlined"
-                                label="Phone Number"
-                                name="phoneNumber"
+                                label="Contact Number"
+                                name="contactNumber"
                                 type="number"
                                 required
                                 fullWidth
-                                error={touched.phoneNumber && (typeof errors.phoneNumber === 'string' && errors.phoneNumber.length > 0)}
+                                error={touched.contactNumber && (typeof errors.contactNumber === 'string' && errors.contactNumber.length > 0)}
                             />
                             <Field
                                 as={TextField}
@@ -384,7 +387,7 @@ function AddEditResource() {
                                 rows={4}
                                 error={touched.description && (typeof errors.description === 'string' && errors.description.length > 0)}
                             />
-                            {isVerifiedLeadPage && <Field
+                            {needSecretKey && <Field
                                 as={TextField}
                                 className="mb-4"
                                 onChange={(event: any) => {

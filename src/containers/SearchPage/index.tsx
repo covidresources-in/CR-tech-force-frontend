@@ -12,6 +12,7 @@ import { Context as SearchContext } from '../../context/SearchContext';
 import { logEvent } from "../../utils/gtag";
 import { searchGraphQLNode } from './types';
 import { transformSearchDataToSearchResultCardData } from './data-transformer';
+import LazyLoad from 'react-lazyload';
 
 const TIMEOUT_DEFAULT_TIME = 15;
 const TWITTER_SOCIAL_HANDLE = 'https://twitter.com/COVResourcesIn'
@@ -141,12 +142,18 @@ function SearchPage() {
             {currentData.map(((edgeData: {
               node: searchGraphQLNode
             }, index: number) =>
-              <SearchResultCard
+              <div
+                className="col-12 col-md-6 col-lg-4 "
                 key={index}
-                data={transformSearchDataToSearchResultCardData(edgeData.node)}
-                className="col-12 col-md-6 col-lg-4 px-sm-4"
-                executeSearch={executeSearch}
-              />
+              >
+                <LazyLoad>
+                  <SearchResultCard
+                    data={transformSearchDataToSearchResultCardData(edgeData.node)}
+                    className="px-sm-4"
+                    executeSearch={executeSearch}
+                  />
+                </LazyLoad>
+              </div>
             ))}
           </div></>}
       </>}
