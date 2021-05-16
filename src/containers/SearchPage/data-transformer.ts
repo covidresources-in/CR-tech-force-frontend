@@ -6,7 +6,7 @@ dayjs.extend(relativeTime);
 
 export const transformSearchDataToSearchResultCardData = (data: searchGraphQLNode): SearchResultCardData => {
     const {
-        contactName, contactNumber, id, upvoteCount, 
+        contactName, contactNumber, leadId, upvoteCount, 
         downvoteCount, updatedAt, state, city, address,
          pincode, description, resourceType, subResourceType 
         } = data;
@@ -22,7 +22,7 @@ export const transformSearchDataToSearchResultCardData = (data: searchGraphQLNod
         contactNumber,
         description,
         downvoteCount: Number(downvoteCount),
-        id,
+        id: leadId,
         lastVerified: getVerifiedText(updatedAt),
         location,
         resourceType,

@@ -1,5 +1,5 @@
 export interface searchGraphQLNode {
-    id: string;
+    leadId: string;
     updatedAt: string;
     resourceType: string;
     subResourceType: string;

@@ -8,13 +8,13 @@ import {
   makeStyles,
   Snackbar,
   Typography,
-  withTheme,
+  withTheme
 } from "@material-ui/core";
 import ThumbDownAltIcon from "@material-ui/icons/ThumbDownAlt";
 import ThumbUpAltIcon from "@material-ui/icons/ThumbUpAlt";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import CopyButton from "../../global/assets/icons/copy.svg";
 import GreenTick from "../GreenTick/GreenTick";
 import { SearchResultCardData } from "./types";
@@ -107,6 +107,11 @@ const DOWNVOTE_COUNT = gql`
 interface Props {
   data: SearchResultCardData;
   className: string;
+  executeSearch: () => any;
+}
+
+interface Voted {
+  [id: string]: string;
 }
 
 const SearchResultCard = (props: Props) => {
@@ -118,8 +123,7 @@ const SearchResultCard = (props: Props) => {
     upvoteCount
   } = props.data;
 
-  let allVotes = JSON.parse(localStorage.getItem("voted"));
-  const [voted, setVoted] = useState(allVotes);
+  const [voted, setVoted] = useState(localStorage.getItem("voted") ? JSON.parse(localStorage.getItem("voted")) as Voted : {} as Voted);
   const [upvote, setUpvote] = useState(upvoteCount);
   const [downvote, setDownvote] = useState(downvoteCount);
 
@@ -174,52 +178,23 @@ const SearchResultCard = (props: Props) => {
     },
   });
 
-  const handleTicketVoteClick = useCallback(
-    (vote) => {
-      let voteUpdateBy = 1;
+  const handleTicketVoteClick =
+    (vote: string) => {
+      setVoted((voted) => {
+        voted[id] = vote;
+        return { ...voted }
+      });
 
-      let votedFor = localStorage.getItem("voted");
-      if (votedFor) {
-        votedFor = JSON.parse(votedFor);
-        if (votedFor[id]) {
-          if (votedFor[id] === vote) {
-            vote = vote === "up" ? "down" : "up";
-          } else {
-            voteUpdateBy = 2;
-          }
-          delete votedFor[id];
-        } else {
-          votedFor[id] = vote;
-        }
+      if (vote === "up") {
+        upvoteTicket();
       } else {
-        votedFor = {};
-        votedFor[id] = vote;
+        downvoteTicket();
       }
-
-      if (voteUpdateBy === 2) {
-        localStorage.setItem(`voteUpdateBy-${id}`, 2);
-        localStorage.setItem(`currentVote-${id}`, vote);
-      }
-
-      setVoted(votedFor);
-      localStorage.setItem("voted", JSON.stringify(votedFor));
-      vote === "up" ? upvoteTicket() : downvoteTicket();
-    },
-    [upvoteTicket, downvoteTicket, id]
-  );
+    };
 
   useEffect(() => {
-    let voteUpdateBy = parseInt(
-      localStorage.getItem(`voteUpdateBy-${id}`)
-    );
-    let currentVote = localStorage.getItem(`currentVote-${id}`);
-
-    if (voteUpdateBy === 2 && currentVote) {
-      handleTicketVoteClick(currentVote === "up" ? "up" : "down");
-      localStorage.removeItem(`voteUpdateBy-${id}`);
-      localStorage.removeItem(`currentVote-${id}`);
-    }
-  }, [upvote, id, handleTicketVoteClick]);
+    localStorage.setItem('voted', JSON.stringify(voted));
+  }, [voted]);
 
   const getInfoToCopy = () => {
     const subResourceText = subResourceType ? `/${subResourceType}` : "";
@@ -256,6 +231,8 @@ const SearchResultCard = (props: Props) => {
         .catch((error) => console.log("Error sharing", error));
     }
   };
+
+  const isAlreadyVoted = (vote: string) => voted && voted[id] === vote;
 
   return (
     <div className={`${classes.container} ${props.className || ""}`}>
@@ -349,9 +326,10 @@ const SearchResultCard = (props: Props) => {
               <div className={classes.thumbsUp}>
                 <IconButton
                   onClick={() => handleTicketVoteClick("up")}
+                  disabled={isAlreadyVoted("up")}
                   style={{
                     color:
-                      voted && voted[id] === "up" ? "#2AA174" : "#CCC",
+                      isAlreadyVoted("up") ? "#2AA174" : "#CCC",
                     border: "1px solid #ccc",
                   }}
                 >
@@ -366,15 +344,16 @@ const SearchResultCard = (props: Props) => {
               <div className={classes.thumbsDown}>
                 <IconButton
                   onClick={() => handleTicketVoteClick("down")}
+                  disabled={isAlreadyVoted("down")}
                   style={{
                     color:
-                      voted && voted[id] === "down" ? "#E94235" : "#CCC",
+                      isAlreadyVoted("down") ? "#E94235" : "#CCC",
                     border: "1px solid #ccc",
                   }}
                 >
                   <Badge
                     classes={{ badge: classes.downBadge }}
-                    badgeContent={upvote < 0 ? upvote : null}
+                    badgeContent={downvote > 0 ? downvote : null}
                   >
                     <ThumbDownAltIcon />
                   </Badge>

@@ -145,6 +145,7 @@ function SearchPage() {
                 key={index}
                 data={transformSearchDataToSearchResultCardData(edgeData.node)}
                 className="col-12 col-md-6 col-lg-4 px-sm-4"
+                executeSearch={executeSearch}
               />
             ))}
           </div></>}
@@ -159,7 +160,6 @@ const GET_SEARCH = (filter: any) => gql`
             tickets(${filter}) {
               edges {
                 node {
-                  id
                   updatedAt
                   resourceType
                   subResourceType
@@ -172,6 +172,7 @@ const GET_SEARCH = (filter: any) => gql`
                   state
                   pincode
                   address
+                  leadId
                 }
               }
             }
