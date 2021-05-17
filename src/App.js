@@ -73,7 +73,7 @@ function App() {
                 <div className="container">
                   <Switch>
                     <Route exact path="/submit-a-lead" component={AddEditResource} />
-                    <Route exact path="/update-a-lead/:uuid" component={AddEditResource} />
+                    <Route exact path="/update-lead/:uuid" component={AddEditResource} />
                     <Route exact path={VERIFIED_LEAD_PAGE_ROUTE} component={AddEditResource} />
                     <Route exact path="/home" component={Home} />
                     <Route exact path="/search" component={SearchPage} />

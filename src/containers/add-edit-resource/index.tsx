@@ -135,7 +135,7 @@ function AddEditResource() {
         }
     });
 
-    const [getTicket, { data: fetchData, loading: fetchDataLoading }] = useLazyQuery(FETCH_TICKET);
+    const [getTicket, { data: fetchData }] = useLazyQuery(FETCH_TICKET);
     const ticketData = Array.isArray(fetchData?.workspace?.tickets?.edges) ? fetchData?.workspace?.tickets?.edges[0]?.node : null;
 
     useEffect(() => {
