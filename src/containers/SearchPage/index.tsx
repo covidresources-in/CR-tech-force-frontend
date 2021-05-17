@@ -180,6 +180,7 @@ const GET_SEARCH = (filter: any) => gql`
                   pincode
                   address
                   leadId
+                  updateUrl
                 }
               }
             }

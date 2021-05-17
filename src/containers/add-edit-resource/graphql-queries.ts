@@ -42,9 +42,9 @@ query ($uuid: String!) {
           state
           city
           contactName
-          phoneNumber
+          contactNumber
           resourceType
-          resourceSubtype
+          subResourceType
           address
           pincode
           description
@@ -60,22 +60,22 @@ export const UPDATE_TICKET = gql`
     $state: String
     $city: String
     $contactName: String
-    $phoneNumber: String
+    $contactNumber: String
     $resourceType: String
-    $resourceSubtype: String
+    $subResourceType: String
     $address: String
     $pincode: String
     $description: String
     $secretKey: String
   ) {
-    createTicket(
+    updateTicket(
       input: {
         state: $state
         city: $city
         contactName: $contactName
-        phoneNumber: $phoneNumber
+        contactNumber: $contactNumber
         resourceType: $resourceType
-        resourceSubtype: $resourceSubtype
+        subResourceType: $subResourceType
         address: $address
         pincode: $pincode
         description: $description

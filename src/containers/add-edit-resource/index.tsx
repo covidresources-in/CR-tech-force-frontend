@@ -123,7 +123,8 @@ function AddEditResource() {
         }
     });
 
-    const [getTicket, { data: ticketData }] = useLazyQuery(FETCH_TICKET);
+    const [getTicket, { data: fetchData }] = useLazyQuery(FETCH_TICKET);
+    const ticketData = Array.isArray(fetchData?.workspace?.tickets?.edges) ? fetchData?.workspace?.tickets?.edges[0]?.node : null;
 
     useEffect(() => {
         if (isUpdatePage) {
@@ -169,7 +170,7 @@ function AddEditResource() {
                 </div>
             </div>
             <div className="d-flex justify-content-center">
-                <Formik initialValues={ticketData || initialValues} validate={validateForm} onSubmit={handleSubmit}>
+                <Formik enableReinitialize initialValues={ticketData || initialValues} validate={validateForm} onSubmit={handleSubmit}>
                     {({ values, touched, setValues, errors, submitForm, isValid }) => (
                         <Form className={`${isSmBreakpointAndAbove ? 'w-50' : ''}`}>
                             <Field
