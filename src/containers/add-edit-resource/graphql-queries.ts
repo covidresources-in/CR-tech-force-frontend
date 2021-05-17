@@ -48,6 +48,7 @@ query ($uuid: String!) {
           address
           pincode
           description
+          leadId
         }
       }
     }
@@ -67,6 +68,7 @@ export const UPDATE_TICKET = gql`
     $pincode: String
     $description: String
     $secretKey: String
+    $leadId: String
   ) {
     updateTicket(
       input: {
@@ -80,6 +82,7 @@ export const UPDATE_TICKET = gql`
         pincode: $pincode
         description: $description
         secretKey: $secretKey
+        leadId: $leadId
       }
     ) {
       status
