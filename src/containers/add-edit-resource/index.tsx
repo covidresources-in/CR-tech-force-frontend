@@ -1,9 +1,9 @@
 import { ApolloError, useLazyQuery, useMutation } from '@apollo/client';
-import { Button, makeStyles, TextField, Typography } from '@material-ui/core';
+import { Button, LinearProgress, makeStyles, TextField, Typography } from '@material-ui/core';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
-import { Alert, Autocomplete, AutocompleteRenderInputParams } from '@material-ui/lab';
+import { Alert, AlertProps, Autocomplete, AutocompleteRenderInputParams } from '@material-ui/lab';
 import { Field, Form, Formik } from 'formik';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import { VERIFIED_LEAD_PAGE_ROUTE } from '../../constants';
 import statesCitiesData from '../../utils/state-city-map';
@@ -61,9 +61,9 @@ function AddEditResource() {
     const params = useParams<Params>();
 
     const uuid = params.uuid;
-    console.log(uuid, 'uuid')
     const isUpdatePage = uuid;
     const needSecretKey = isVerifiedLeadPage || isUpdatePage;
+    const [responseMessage, setResponseMessage] = useState({ type: 'success', message: '' } as { type: AlertProps['severity'], message: string })
 
     const validateForm = (values: Values) => {
         const errors: Partial<ValuesErrors> = {};
@@ -105,25 +105,37 @@ function AddEditResource() {
         return errors;
     }
 
-    const [createTicket] = useMutation(CREATE_TICKET, {
+    const [createTicket, { loading: createTicketLoading }] = useMutation(CREATE_TICKET, {
         update(_proxy, result) {
-            console.log(result);
+            setResponseMessage({
+                type: 'success',
+                message: 'Succesfully added the lead'
+            })
         },
         onError(error: ApolloError) {
-            console.error(error.message);
+            setResponseMessage({
+                type: 'error',
+                message: error?.data?.createTicket?.message ?? 'Unknown problem occured in submitting request'
+            })
         }
     });
 
-    const [updateTicket] = useMutation(UPDATE_TICKET, {
+    const [updateTicket, { loading: updateTicketLoading }] = useMutation(UPDATE_TICKET, {
         update(_proxy, result) {
-            console.log(result);
+            setResponseMessage({
+                type: 'success',
+                message: 'Succesfully updated the lead'
+            })
         },
         onError(error: ApolloError) {
-            console.error(error.message);
+            setResponseMessage({
+                type: 'error',
+                message: error?.data?.createTicket?.message ?? 'Unknown problem occured in submitting request'
+            })
         }
     });
 
-    const [getTicket, { data: fetchData }] = useLazyQuery(FETCH_TICKET);
+    const [getTicket, { data: fetchData, loading: fetchDataLoading }] = useLazyQuery(FETCH_TICKET);
     const ticketData = Array.isArray(fetchData?.workspace?.tickets?.edges) ? fetchData?.workspace?.tickets?.edges[0]?.node : null;
 
     useEffect(() => {
@@ -408,11 +420,15 @@ function AddEditResource() {
                             {!isValid && <Alert className="mb-3" severity="error">
                                 Please fill all mandatory fields
                                 </Alert>}
-                            <div className="d-flex justify-content-center">
+                            {(createTicketLoading || updateTicketLoading) && <LinearProgress className="w-100" />}
+                            <div className="d-flex justify-content-center mb-3">
                                 <Button size="large" variant="contained" color="primary" onClick={submitForm}>
                                     {isUpdatePage ? 'Update' : 'Submit'}
                                 </Button>
                             </div>
+                            {responseMessage.message && <Alert severity={responseMessage.type}>
+                                {responseMessage.message}
+                            </Alert>}
                         </Form>
                     )}
                 </Formik>
