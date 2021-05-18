@@ -10,11 +10,6 @@ export const transformSearchDataToSearchResultCardData = (data: searchGraphQLNod
         downvoteCount, updatedAt, state, city, address,
          pincode, description, resourceType, subResourceType 
         } = data;
-    const location = `
-    ${address},
-    ${city}, ${state}
-    ${pincode}
-    `;
 
 
     return {
@@ -24,10 +19,13 @@ export const transformSearchDataToSearchResultCardData = (data: searchGraphQLNod
         downvoteCount: Number(downvoteCount),
         id: leadId,
         lastVerified: getVerifiedText(updatedAt),
-        location,
         resourceType,
         subResourceType,
-        upvoteCount: Number(upvoteCount)
+        upvoteCount: Number(upvoteCount),
+        address,
+        city,
+        state,
+        pincode
     }
 }
 

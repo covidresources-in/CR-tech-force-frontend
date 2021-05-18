@@ -8,5 +8,8 @@ export interface SearchResultCardData {
     upvoteCount: number;
     downvoteCount: number;
     description: string;
-    location: string;
+    address: string;
+    state: string;
+    city: string;
+    pincode: string;
 }

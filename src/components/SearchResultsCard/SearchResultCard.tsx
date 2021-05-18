@@ -119,8 +119,8 @@ const SearchResultCard = (props: Props) => {
 
   const {
     contactName, contactNumber, description, downvoteCount,
-    id, lastVerified, location, resourceType, subResourceType,
-    upvoteCount
+    id, lastVerified, address, state, city, pincode,
+    resourceType, subResourceType, upvoteCount
   } = props.data;
 
   const [voted, setVoted] = useState(localStorage.getItem("voted") ? JSON.parse(localStorage.getItem("voted")) as Voted : {} as Voted);
@@ -202,7 +202,10 @@ const SearchResultCard = (props: Props) => {
     const lastVerifiedText = lastVerified ? `Last Verified : ${lastVerified}` : "";
     const contactNameText = contactName ? `Contact Name : ${contactName}` : '';
     const contactNumberText = contactNumber ? `Contact Number : ${contactNumber}` : "";
-    const locationText = location ? `Location : ${location}` : "";
+    const locationText = (address || city || state || pincode) ? `Location : 
+    ${address}
+    ${city}, ${state}
+    ${pincode ?? ''}` : "";
     const descriptionText = description ? `Description : ${description}` : "";
 
     const copyText = `${resourceLeadText}
@@ -298,7 +301,9 @@ const SearchResultCard = (props: Props) => {
             <div className="flex-grow-1 mb-2">
               <Typography variant="body2">Location</Typography>
               <Typography variant="body1" className={classes.blackText}>
-                {location || "-"}
+                {address ? <>{address}<br /></> : ''}
+                {city}, {state} <br />
+                {pincode ?? ''}
               </Typography>
             </div>
 
