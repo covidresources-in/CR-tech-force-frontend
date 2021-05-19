@@ -1,4 +1,4 @@
-const requirements = [
+export const requirements = [
   "Oxygen",
   "Hospital Beds",
   "Medicines/Injections",
@@ -11,4 +11,5 @@ const requirements = [
   "Others",
 ];
 
-export { requirements };
+export const VERIFIED_LEAD_PAGE_ROUTE = '/submit-a-verified-lead';
+
