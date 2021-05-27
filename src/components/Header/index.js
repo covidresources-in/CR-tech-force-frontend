@@ -42,8 +42,8 @@ const DonateButton = (props: ButtonProps) => {
     color="primary"
     variant="contained"
     size="large"
-    primaryText="Donate for Indian Army Covid Facility"
-    onClick={() => window.open("https://milaap.org/fundraisers/support-army-hospital?utm_source=whatsapp&utm_medium=fundraisers-title&mlp_referrer_id=556901")}
+    primaryText="Donate for Indian Airforce Covid Care Facility"
+    onClick={() => window.open("https://www.donatekart.com/UFF/help-indianairforce")}
     iconSrc={IndiaFlag}
   >
   </JumboButton>
