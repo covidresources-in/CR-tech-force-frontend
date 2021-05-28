@@ -19,9 +19,9 @@ const clearErrorMessage = (dispatch) => () => {
   });
 };
 
-const searchInputs = (dispatch) => async ({ state, city, requirement }) => {
+const searchInputs = (dispatch) => async ({ state, city, requirement, subrequirement }) => {
   try {
-    dispatch({ type: 'search_input', payload: { state, city, requirement } });
+    dispatch({ type: 'search_input', payload: { state, city, requirement, subrequirement } });
   } catch (err) {
     dispatch({
       type: 'add_error',
