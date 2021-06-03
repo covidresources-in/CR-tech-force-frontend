@@ -11,7 +11,7 @@ export const CREATE_TICKET = gql`
     $address: String
     $pincode: String
     $description: String
-    $secretKey: String
+    $status: String
   ) {
     createTicket(
       input: {
@@ -24,7 +24,7 @@ export const CREATE_TICKET = gql`
         address: $address
         pincode: $pincode
         description: $description
-        secretKey: $secretKey
+        status: $status
       }
     ) {
       status
@@ -67,7 +67,7 @@ export const UPDATE_TICKET = gql`
     $address: String
     $pincode: String
     $description: String
-    $secretKey: String
+    $status: String
     $leadId: String
   ) {
     updateTicket(
@@ -81,7 +81,7 @@ export const UPDATE_TICKET = gql`
         address: $address
         pincode: $pincode
         description: $description
-        secretKey: $secretKey
+        status: $status
         leadId: $leadId
       }
     ) {
