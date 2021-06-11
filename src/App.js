@@ -18,7 +18,7 @@ import './global/styles/common.scss';
 
 const timeoutLink = new ApolloLinkTimeout(15000);
 const httpLink = createHttpLink({
-  uri: 'https://e1xevguqtj.execute-api.ap-south-1.amazonaws.com/metabase/graphql'
+  uri: 'https://6rfzd6m7i1.execute-api.ap-south-1.amazonaws.com/uat/graphql'
 })
 
 const timeoutHttpLink = timeoutLink.concat(httpLink);

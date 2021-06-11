@@ -20,7 +20,6 @@ interface Values {
     contactName: string;
     contactNumber: number | null;
     description: string;
-    secretKey: string;
 }
 
 interface ValuesErrors extends Omit<Values, 'pincode' | 'contactNumber'> {
@@ -38,7 +37,6 @@ const initialValues: Values = {
     description: '',
     resourceType: '',
     subResourceType: '',
-    secretKey: '',
 }
 
 const isVerifiedLeadPage = window.location.pathname.includes(VERIFIED_LEAD_PAGE_ROUTE);
@@ -62,7 +60,6 @@ function AddEditResource() {
 
     const uuid = params.uuid;
     const isUpdatePage = uuid;
-    const needSecretKey = isVerifiedLeadPage || isUpdatePage;
     const [responseMessage, setResponseMessage] = useState({ type: 'success', message: '' } as { type: AlertProps['severity'], message: string })
 
     const validateForm = (values: Values) => {
@@ -96,10 +93,6 @@ function AddEditResource() {
 
         if (!values.contactNumber) {
             errors.contactNumber = `It's important to know`
-        }
-
-        if (needSecretKey && !values.secretKey) {
-            errors.secretKey = `It's important to know`
         }
 
         return errors;
@@ -153,11 +146,15 @@ function AddEditResource() {
             updateTicket({
                 variables: {
                     ...values,
+                    status: 'VERIFIED'
                 }
             })
         } else {
             createTicket({
-                variables: values
+                variables: {
+                    ...values,
+                    status: isVerifiedLeadPage ? 'VERIFIED' : ''
+                }
             });
         }
     }
@@ -400,23 +397,6 @@ function AddEditResource() {
                                 rows={4}
                                 error={touched.description && (typeof errors.description === 'string' && errors.description.length > 0)}
                             />
-                            {needSecretKey && <Field
-                                as={TextField}
-                                className="mb-4"
-                                onChange={(event: any) => {
-                                    setValues({
-                                        ...values,
-                                        secretKey: event.target.value
-                                    })
-                                }}
-                                value={values.secretKey || ''}
-                                variant="outlined"
-                                label="Secret Key"
-                                name="secretKey"
-                                required
-                                fullWidth
-                                error={touched.secretKey && (typeof errors.secretKey === 'string' && errors.secretKey.length > 0)}
-                            />}
                             {!isValid && <Alert className="mb-3" severity="error">
                                 Please fill all mandatory fields
                                 </Alert>}
